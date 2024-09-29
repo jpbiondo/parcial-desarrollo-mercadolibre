@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "")
+@RequestMapping(path = "/mutant")
 @CrossOrigin(origins = "*")
 public class MutanteController {
     private MutanteService mutanteService;
@@ -17,7 +17,7 @@ public class MutanteController {
         this.mutanteService = mutanteService;
     }
 
-    @PostMapping("/mutant")
+    @PostMapping("")
     public ResponseEntity<?> isMutant(@RequestBody Mutante mutante) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(mutanteService.isMutant(mutante));
