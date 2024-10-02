@@ -8,6 +8,15 @@ import org.springframework.stereotype.Service;
 public class MutanteService {
     @Transactional
     public boolean isMutant(Mutante mutante){
+
+        return true;
+    }
+
+    private boolean isValidDNAFormat(String[] dna){
+        int dnaRows = dna.length;
+        for(int i = 0; i < dnaRows; i++) {
+            if(dna[i].length() != dnaRows) return false;
+        }
         return true;
     }
 }
