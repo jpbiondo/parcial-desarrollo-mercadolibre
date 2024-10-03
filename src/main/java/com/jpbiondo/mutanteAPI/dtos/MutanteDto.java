@@ -1,6 +1,5 @@
-package com.jpbiondo.mutanteAPI.entities;
+package com.jpbiondo.mutanteAPI.dtos;
 
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Mutante {
+public class MutanteDto {
     private String[] dna;
 }
