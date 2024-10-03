@@ -13,6 +13,12 @@ public class MutanteService {
 
         //The array must be greater than 3x3 in order to have risk of being mutant
         if(dna.length < 4) return false;
+
+
+        int consecutivesByCol;
+        int[] consecutivesByRow;
+        int[] consecutivesByLRDiagonal;
+        int[] consecutivesByRLDiagonal;
         return true;
     }
 
@@ -22,5 +28,9 @@ public class MutanteService {
             if(dna[i].length() != dnaRows) return false;
         }
         return true;
+    }
+
+    private int checkConsecutive(char a, char b, int consecutiveCount) {
+        return a==b ? ++consecutiveCount : 1;
     }
 }
