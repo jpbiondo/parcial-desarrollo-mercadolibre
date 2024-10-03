@@ -33,4 +33,8 @@ public class MutanteService {
     private int checkConsecutive(char a, char b, int consecutiveCount) {
         return a==b ? ++consecutiveCount : 1;
     }
+
+    private boolean isSequence(int consecutiveCount) {
+        return consecutiveCount == 4;
+    }
 }
