@@ -4,6 +4,8 @@ import com.jpbiondo.mutanteAPI.entities.Mutante;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import static java.lang.Math.abs;
+
 @Service
 public class MutanteService {
     @Transactional
@@ -36,5 +38,9 @@ public class MutanteService {
 
     private boolean isSequence(int consecutiveCount) {
         return consecutiveCount == 4;
+    }
+
+    private boolean isAValidDiagonalChar(int radius, int refPoint, int actPoint) {
+        return abs(refPoint - actPoint) <= radius;
     }
 }
