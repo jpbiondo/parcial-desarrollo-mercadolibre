@@ -22,7 +22,7 @@ public class MutanteController {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(mutanteService.isMutant(mutanteDto));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("\"error\":\"El ADN ingresado no es de un mutante\"}");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"error\":\"El ADN ingresado no es de un mutante\"}");
         }
     }
 }
