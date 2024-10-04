@@ -33,9 +33,7 @@ public class MutanteService {
         if(dna.length == 0) throw new Exception("[Error] Invalid DNA format. In NxN matrix N must be >= 1");
         //The array must be greater than 3x3 in order to have risk of being mutant
         if(dna.length < 4) {
-            mutantePrueba.setMutant(false);
-            mutantePruebaRepository.save(mutantePrueba);
-
+            setMutantAndSave(mutantePrueba, false);
             throw new Exception("Not a mutant");
         }
 
@@ -87,18 +85,13 @@ public class MutanteService {
                 }
 
                 if(countSequence > 1) {
-
-                    mutantePrueba.setMutant(true);
-                    mutantePruebaRepository.save(mutantePrueba);
-
-                    return true;
+                    return setMutantAndSave(mutantePrueba, true);
                 };
 
             }
         }
 
-        mutantePrueba.setMutant(false);
-        mutantePruebaRepository.save(mutantePrueba);
+        setMutantAndSave(mutantePrueba, false);
         throw new Exception("Not a mutant");
     }
 
@@ -120,5 +113,11 @@ public class MutanteService {
 
     private boolean isAValidDiagonalChar(int radius, int refPoint, int actPoint) {
         return abs(refPoint - actPoint) <= radius;
+    }
+
+    private boolean setMutantAndSave(MutantePrueba mutantePrueba, boolean isMutant) {
+        mutantePrueba.setMutant(isMutant);
+        mutantePruebaRepository.save(mutantePrueba);
+        return isMutant;
     }
 }
