@@ -1,7 +1,10 @@
 package com.jpbiondo.mutanteAPI.services;
 
 import com.jpbiondo.mutanteAPI.dtos.MutantePruebaDto;
+import com.jpbiondo.mutanteAPI.entities.MutantePrueba;
+import com.jpbiondo.mutanteAPI.repository.MutantePruebaRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -10,13 +13,30 @@ import static java.lang.Math.abs;
 
 @Service
 public class MutanteService {
+    private MutantePruebaRepository mutantePruebaRepository;
+
+    @Autowired
+    public MutanteService(MutantePruebaRepository mutantePruebaRepository) {
+        this.mutantePruebaRepository = mutantePruebaRepository;
+    }
+
     @Transactional
     public boolean isMutant(MutantePruebaDto mutantePruebaDto) throws Exception{
+
         String[] dna = mutantePruebaDto.getDna();
+
+        MutantePrueba mutantePrueba = new MutantePrueba();
+        mutantePrueba.setDna(dna);
+
         if(!isValidDNAFormat(dna)) throw new Exception("[Error] Invalid DNA format. Must be NxN");
 
         //The array must be greater than 3x3 in order to have risk of being mutant
-        if(dna.length < 4) throw new Exception("Not a mutant");
+        if(dna.length < 4) {
+            mutantePrueba.setMutant(false);
+            mutantePruebaRepository.save(mutantePrueba);
+
+            throw new Exception("Not a mutant");
+        }
 
 
         int consecutivesByCol = 1;
@@ -65,7 +85,13 @@ public class MutanteService {
                     if(isSequence(consecutivesByRow[j])) countSequence++;
                 }
 
-                if(countSequence > 1) return true;
+                if(countSequence > 1) {
+
+                    mutantePrueba.setMutant(true);
+                    mutantePruebaRepository.save(mutantePrueba);
+
+                    return true;
+                };
 
             }
         }
