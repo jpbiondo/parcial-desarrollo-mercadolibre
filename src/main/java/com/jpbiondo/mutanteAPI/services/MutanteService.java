@@ -30,6 +30,7 @@ public class MutanteService {
 
         if(!isValidDNAFormat(dna)) throw new Exception("[Error] Invalid DNA format. Must be NxN");
 
+        if(dna.length == 0) throw new Exception("[Error] Invalid DNA format. In NxN matrix N must be >= 1");
         //The array must be greater than 3x3 in order to have risk of being mutant
         if(dna.length < 4) {
             mutantePrueba.setMutant(false);
