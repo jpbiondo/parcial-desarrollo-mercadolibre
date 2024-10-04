@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface MutantePruebaRepository extends JpaRepository<MutantePrueba, Long> {
 
-    @Query("SELECT COUNT(*) FROM MUTANTE_PRUEBA_DTO WHERE IS_MUTANT = TRUE")
-    int countByIsMutant();
+    long countByIsMutant(boolean isMutant);
 
 }

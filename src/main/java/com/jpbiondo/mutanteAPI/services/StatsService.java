@@ -15,13 +15,13 @@ public class StatsService {
     }
 
     public StatsDto getStats() {
-        long countMutantTests = mutantePruebaRepository.countByIsMutant();
-        long countNonMutantTests = mutantePruebaRepository.count() - countMutantTests;
+        long countMutantTests = mutantePruebaRepository.countByIsMutant(true);
+        long countHumanTests = mutantePruebaRepository.count() - countMutantTests;
 
         StatsDto statsDto = new StatsDto();
         statsDto.setCountMutantDna(countMutantTests);
-        statsDto.setCountHumanDna(countNonMutantTests);
-        statsDto.setRatio((float) countMutantTests / countNonMutantTests);
+        statsDto.setCountHumanDna(countHumanTests);
+        statsDto.setRatio(countHumanTests == 0 ? countMutantTests : (float) countMutantTests / countHumanTests);
 
         return statsDto;
     }

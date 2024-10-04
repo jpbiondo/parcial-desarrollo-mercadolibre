@@ -96,6 +96,8 @@ public class MutanteService {
             }
         }
 
+        mutantePrueba.setMutant(false);
+        mutantePruebaRepository.save(mutantePrueba);
         throw new Exception("Not a mutant");
     }
 
