@@ -1,6 +1,6 @@
 package com.jpbiondo.mutanteAPI.controllers;
 
-import com.jpbiondo.mutanteAPI.dtos.MutanteDto;
+import com.jpbiondo.mutanteAPI.dtos.MutantePruebaDto;
 import com.jpbiondo.mutanteAPI.services.MutanteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,9 +18,9 @@ public class MutanteController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> isMutant(@RequestBody MutanteDto mutanteDto) {
+    public ResponseEntity<?> isMutant(@RequestBody MutantePruebaDto mutantePruebaDto) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(mutanteService.isMutant(mutanteDto));
+            return ResponseEntity.status(HttpStatus.OK).body(mutanteService.isMutant(mutantePruebaDto));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"error\":\"El ADN ingresado no es de un mutante\"}");
         }

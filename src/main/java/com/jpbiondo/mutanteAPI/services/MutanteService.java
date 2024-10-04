@@ -1,6 +1,6 @@
 package com.jpbiondo.mutanteAPI.services;
 
-import com.jpbiondo.mutanteAPI.dtos.MutanteDto;
+import com.jpbiondo.mutanteAPI.dtos.MutantePruebaDto;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +11,8 @@ import static java.lang.Math.abs;
 @Service
 public class MutanteService {
     @Transactional
-    public boolean isMutant(MutanteDto mutanteDto) throws Exception{
-        String[] dna = mutanteDto.getDna();
+    public boolean isMutant(MutantePruebaDto mutantePruebaDto) throws Exception{
+        String[] dna = mutantePruebaDto.getDna();
         if(!isValidDNAFormat(dna)) throw new Exception("[Error] Invalid DNA format. Must be NxN");
 
         //The array must be greater than 3x3 in order to have risk of being mutant
