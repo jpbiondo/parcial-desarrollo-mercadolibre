@@ -1,5 +1,6 @@
 package com.jpbiondo.mutanteAPI.services;
 
+import com.jpbiondo.mutanteAPI.dtos.StatsDto;
 import com.jpbiondo.mutanteAPI.repository.MutantePruebaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,4 +14,15 @@ public class StatsService {
         this.mutantePruebaRepository = mutantePruebaRepository;
     }
 
+    public StatsDto getStats() {
+        long countMutantTests = mutantePruebaRepository.countByIsMutant();
+        long countNonMutantTests = mutantePruebaRepository.count() - countMutantTests;
+
+        StatsDto statsDto = new StatsDto();
+        statsDto.setCountMutantDna(countMutantTests);
+        statsDto.setCountHumanDna(countNonMutantTests);
+        statsDto.setRatio((float) countMutantTests / countNonMutantTests);
+
+        return statsDto;
+    }
 }

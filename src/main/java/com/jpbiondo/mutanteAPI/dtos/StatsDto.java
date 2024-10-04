@@ -1,7 +1,16 @@
 package com.jpbiondo.mutanteAPI.dtos;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class StatsDto {
-    private int countMutantDna;
-    private int countHumanDna;
+    private long countMutantDna;
+    private long countHumanDna;
     private float ratio;
 }
