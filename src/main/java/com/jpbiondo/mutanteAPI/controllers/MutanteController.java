@@ -18,9 +18,9 @@ public class MutanteController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> isMutant(@RequestBody MutantePruebaDto mutantePruebaDto) {
+    public ResponseEntity<?> analyzeDna(@RequestBody MutantePruebaDto mutantePruebaDto) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(mutanteService.isMutant(mutantePruebaDto));
+            return ResponseEntity.status(HttpStatus.OK).body(mutanteService.analyzeDna(mutantePruebaDto));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"error\":\"" + e.getMessage() + "\"}");
         }

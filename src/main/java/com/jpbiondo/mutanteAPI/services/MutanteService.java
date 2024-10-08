@@ -13,7 +13,7 @@ import static java.lang.Math.abs;
 
 @Service
 public class MutanteService {
-    private MutantePruebaRepository mutantePruebaRepository;
+    private final MutantePruebaRepository mutantePruebaRepository;
 
     @Autowired
     public MutanteService(MutantePruebaRepository mutantePruebaRepository) {
@@ -21,22 +21,30 @@ public class MutanteService {
     }
 
     @Transactional
-    public boolean isMutant(MutantePruebaDto mutantePruebaDto) throws Exception{
-
+    public boolean analyzeDna(MutantePruebaDto mutantePruebaDto) throws Exception{
         String[] dna = mutantePruebaDto.getDna();
+
+        if(!isValidDNAFormat(dna)) throw new Exception("[Error] Invalid DNA format.");
 
         MutantePrueba mutantePrueba = new MutantePrueba();
         mutantePrueba.setDna(dna);
 
-        if(!isValidDNAFormat(dna)) throw new Exception("[Error] Invalid DNA format. Must be NxN");
-
-        if(dna.length == 0) throw new Exception("[Error] Invalid DNA format. In NxN matrix N must be >= 1");
         //The array must be greater than 3x3 in order to have risk of being mutant
         if(dna.length < 4) {
-            setMutantAndSave(mutantePrueba, false);
+            mutantePrueba.setMutant(false);
+            mutantePruebaRepository.save(mutantePrueba);
             throw new Exception("Not a mutant");
         }
 
+        mutantePrueba.setMutant(isMutant(dna));
+        if(mutantePrueba.isMutant()) {
+            mutantePruebaRepository.save(mutantePrueba);
+            return true;
+        }
+        throw new Exception("Not a mutant");
+    }
+
+    public static boolean isMutant(String[] dna) {
 
         int consecutivesByCol = 1;
         int[] consecutivesByRow = new int[dna.length];
@@ -84,40 +92,47 @@ public class MutanteService {
                     if(isSequence(consecutivesByRow[j])) countSequence++;
                 }
 
-                if(countSequence > 1) {
-                    return setMutantAndSave(mutantePrueba, true);
-                };
-
+                if(countSequence > 1) return true;
             }
         }
-
-        setMutantAndSave(mutantePrueba, false);
-        throw new Exception("Not a mutant");
+        return false;
     }
 
-    private boolean isValidDNAFormat(String[] dna){
+    private static boolean isValidDNAFormat(String[] dna){
+        return isNxNDNA(dna) &&
+                containsDnaValidChars(dna) &&
+                dna.length > 0;
+    }
+
+    private static boolean isNxNDNA(String[] dna) {
         int dnaRows = dna.length;
-        for (String s : dna) {
-            if (s.length() != dnaRows) return false;
+        for (String dnaRow : dna) {
+            if (dnaRow.length() != dnaRows) return false;
         }
         return true;
     }
 
-    private int checkConsecutive(char a, char b, int consecutiveCount) {
+    private static boolean containsDnaValidChars(String[] dna) {
+        final String dnaValidChars = "ACTG";
+        for(String dnaRow: dna) {
+            for(char dnaChar: dnaRow.toCharArray()) {
+                if(dnaValidChars.indexOf(dnaChar) == -1) return false;
+            }
+        }
+        return true;
+    }
+
+    private static int checkConsecutive(char a, char b, int consecutiveCount) {
         return a==b ? ++consecutiveCount : 1;
     }
 
-    private boolean isSequence(int consecutiveCount) {
+    private static boolean isSequence(int consecutiveCount) {
         return consecutiveCount == 4;
     }
 
-    private boolean isAValidDiagonalChar(int radius, int refPoint, int actPoint) {
+    private static boolean isAValidDiagonalChar(int radius, int refPoint, int actPoint) {
         return abs(refPoint - actPoint) <= radius;
     }
 
-    private boolean setMutantAndSave(MutantePrueba mutantePrueba, boolean isMutant) {
-        mutantePrueba.setMutant(isMutant);
-        mutantePruebaRepository.save(mutantePrueba);
-        return isMutant;
-    }
+
 }
