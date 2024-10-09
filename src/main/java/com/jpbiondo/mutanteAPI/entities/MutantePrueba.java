@@ -19,4 +19,6 @@ public class MutantePrueba implements Serializable {
     private String[] dna;
 
     private boolean isMutant;
+
+    private int count;
 }

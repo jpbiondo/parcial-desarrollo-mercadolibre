@@ -7,7 +7,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static java.lang.Math.abs;
 
@@ -23,10 +25,20 @@ public class MutanteService {
     @Transactional
     public boolean analyzeDna(MutantePruebaDto mutantePruebaDto) throws Exception{
         String[] dna = mutantePruebaDto.getDna();
+        MutantePrueba mutantePrueba;
 
         if(!isValidDNAFormat(dna)) throw new Exception("[Error] Invalid DNA format.");
 
-        MutantePrueba mutantePrueba = new MutantePrueba();
+        Optional<MutantePrueba> mutantePruebaOptional = mutantePruebaRepository.findByDna(dna);
+        if(mutantePruebaOptional.isPresent()) {
+            mutantePrueba = mutantePruebaOptional.get();
+            mutantePrueba.setCount(mutantePrueba.getCount() + 1);
+            mutantePruebaRepository.save(mutantePrueba);
+            return mutantePruebaOptional.get().isMutant();
+        }
+
+        mutantePrueba = new MutantePrueba();
+        mutantePrueba.setCount(1);
         mutantePrueba.setDna(dna);
 
         //The array must be greater than 3x3 in order to have risk of being mutant

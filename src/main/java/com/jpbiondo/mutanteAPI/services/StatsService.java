@@ -15,8 +15,11 @@ public class StatsService {
     }
 
     public StatsDto getStats() {
-        long countMutantTests = mutantePruebaRepository.countByIsMutant(true);
-        long countHumanTests = mutantePruebaRepository.count() - countMutantTests;
+        Long countMutantTests = mutantePruebaRepository.sumByCountAndIsMutantEqual(true);
+        Long countHumanTests = mutantePruebaRepository.sumByCountAndIsMutantEqual(false);
+
+        if(countHumanTests == null) countHumanTests = 0L;
+        if(countMutantTests == null) countMutantTests = 0L;
 
         StatsDto statsDto = new StatsDto();
         statsDto.setCountMutantDna(countMutantTests);
