@@ -34,7 +34,8 @@ public class MutanteService {
             mutantePrueba = mutantePruebaOptional.get();
             mutantePrueba.setCount(mutantePrueba.getCount() + 1);
             mutantePruebaRepository.save(mutantePrueba);
-            return mutantePruebaOptional.get().isMutant();
+            if(mutantePruebaOptional.get().isMutant()) return true;
+            throw new Exception("Not a mutant");
         }
 
         mutantePrueba = new MutantePrueba();
@@ -52,7 +53,6 @@ public class MutanteService {
         mutantePruebaRepository.save(mutantePrueba);
 
         if(mutantePrueba.isMutant()) return true;
-
         throw new Exception("Not a mutant");
     }
 
