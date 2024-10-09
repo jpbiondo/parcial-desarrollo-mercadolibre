@@ -49,10 +49,10 @@ public class MutanteService {
         }
 
         mutantePrueba.setMutant(isMutant(dna));
-        if(mutantePrueba.isMutant()) {
-            mutantePruebaRepository.save(mutantePrueba);
-            return true;
-        }
+        mutantePruebaRepository.save(mutantePrueba);
+
+        if(mutantePrueba.isMutant()) return true;
+
         throw new Exception("Not a mutant");
     }
 
