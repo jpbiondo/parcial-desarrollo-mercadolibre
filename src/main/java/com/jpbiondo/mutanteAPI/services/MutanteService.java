@@ -7,7 +7,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -26,16 +25,19 @@ public class MutanteService {
     public boolean analyzeDna(MutantePruebaDto mutantePruebaDto) throws Exception{
         String[] dna = mutantePruebaDto.getDna();
         MutantePrueba mutantePrueba;
-
+        double startTime = System.nanoTime();
         Optional<MutantePrueba> mutantePruebaOptional = mutantePruebaRepository.findByDna(dna);
         if(mutantePruebaOptional.isPresent()) {
             mutantePrueba = mutantePruebaOptional.get();
             mutantePrueba.setCount(mutantePrueba.getCount() + 1);
             mutantePruebaRepository.save(mutantePrueba);
+            System.out.println("Elapsed time in query: " + (System.nanoTime() - startTime) / 1000000 + "ms");
             if(mutantePruebaOptional.get().isMutant()) return true;
             throw new Exception("Not a mutant");
         }
 
+
+        startTime = System.nanoTime();
         mutantePrueba = new MutantePrueba();
         mutantePrueba.setCount(1);
         mutantePrueba.setDna(dna);
@@ -49,7 +51,7 @@ public class MutanteService {
 
         mutantePrueba.setMutant(isMutant(dna));
         mutantePruebaRepository.save(mutantePrueba);
-
+        System.out.println("Elapsed time in algorithm: " + (System.nanoTime() - startTime) / 1000000 + "ms");
         if(mutantePrueba.isMutant()) return true;
         throw new Exception("Not a mutant");
     }
