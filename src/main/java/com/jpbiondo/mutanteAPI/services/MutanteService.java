@@ -27,8 +27,6 @@ public class MutanteService {
         String[] dna = mutantePruebaDto.getDna();
         MutantePrueba mutantePrueba;
 
-        if(!isValidDNAFormat(dna)) throw new Exception("[Error] Invalid DNA format.");
-
         Optional<MutantePrueba> mutantePruebaOptional = mutantePruebaRepository.findByDna(dna);
         if(mutantePruebaOptional.isPresent()) {
             mutantePrueba = mutantePruebaOptional.get();
@@ -108,30 +106,6 @@ public class MutanteService {
             }
         }
         return false;
-    }
-
-    private static boolean isValidDNAFormat(String[] dna){
-        return isNxNDNA(dna) &&
-                containsDnaValidChars(dna) &&
-                dna.length > 0;
-    }
-
-    private static boolean isNxNDNA(String[] dna) {
-        int dnaRows = dna.length;
-        for (String dnaRow : dna) {
-            if (dnaRow.length() != dnaRows) return false;
-        }
-        return true;
-    }
-
-    private static boolean containsDnaValidChars(String[] dna) {
-        final String dnaValidChars = "ACTG";
-        for(String dnaRow: dna) {
-            for(char dnaChar: dnaRow.toCharArray()) {
-                if(dnaValidChars.indexOf(dnaChar) == -1) return false;
-            }
-        }
-        return true;
     }
 
     private static int checkConsecutive(char a, char b, int consecutiveCount) {
