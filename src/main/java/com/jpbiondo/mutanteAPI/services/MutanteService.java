@@ -32,7 +32,7 @@ public class MutanteService {
             mutantePrueba.setCount(mutantePrueba.getCount() + 1);
             mutantePruebaRepository.save(mutantePrueba);
             System.out.println("Elapsed time in query: " + (System.nanoTime() - startTime) / 1000000 + "ms");
-            if(mutantePruebaOptional.get().isMutant()) return true;
+            if(mutantePrueba.isMutant()) return true;
             throw new Exception("Not a mutant");
         }
 

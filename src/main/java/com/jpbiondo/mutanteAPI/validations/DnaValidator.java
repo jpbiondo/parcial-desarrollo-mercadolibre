@@ -15,6 +15,7 @@ public class DnaValidator implements ConstraintValidator<ValidDna, String[]> {
     private boolean isNxNDNA(String[] dna) {
         int dnaRows = dna.length;
         for (String dnaRow : dna) {
+            if(dnaRow == null) return false;
             if (dnaRow.length() != dnaRows) return false;
         }
         return true;
@@ -23,6 +24,7 @@ public class DnaValidator implements ConstraintValidator<ValidDna, String[]> {
     private boolean containsDnaValidChars(String[] dna) {
         final String dnaValidChars = "ACTG";
         for(String dnaRow: dna) {
+            if(dnaRow == null) return false;
             for(char dnaChar: dnaRow.toCharArray()) {
                 if(dnaValidChars.indexOf(dnaChar) == -1) return false;
             }

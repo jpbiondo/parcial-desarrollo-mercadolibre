@@ -4,17 +4,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class DNAValidatorTest {
-    private DnaValidator dnaValidator = new DnaValidator();
+    private final DnaValidator dnaValidator = new DnaValidator();
 
     @Test
     void testNullDna() {
-        Assertions.assertEquals(false, dnaValidator.isValid(null, null));
+        Assertions.assertFalse(dnaValidator.isValid(null, null));
     }
 
     @Test
     void testEmptyDna() {
         String dna[] = {};
-        Assertions.assertEquals(false, dnaValidator.isValid(dna, null));
+        Assertions.assertFalse(dnaValidator.isValid(dna, null));
     }
 
     @Test
@@ -26,7 +26,7 @@ public class DNAValidatorTest {
                 "AAG"
         };
 
-        Assertions.assertEquals(false, dnaValidator.isValid(dna, null));
+        Assertions.assertFalse(dnaValidator.isValid(dna, null));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class DNAValidatorTest {
                 "AAGA"
         };
 
-        Assertions.assertEquals(true, dnaValidator.isValid(dna, null));
+        Assertions.assertTrue(dnaValidator.isValid(dna, null));
     }
 
     @Test
@@ -50,6 +50,14 @@ public class DNAValidatorTest {
                 "AAGA"
         };
 
-        Assertions.assertEquals(false, dnaValidator.isValid(dna, null));
+        Assertions.assertFalse(dnaValidator.isValid(dna, null));
+    }
+
+    @Test
+    void testNullDnaMatrixInvalid() {
+        String[] dna = {
+                null, null,  null
+        };
+        Assertions.assertFalse(dnaValidator.isValid(dna, null));
     }
 }
