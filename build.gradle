@@ -29,6 +29,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
 	implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.1.Final'
 
+	//Mockito
+	testImplementation "org.mockito:mockito-core:3.+"
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
