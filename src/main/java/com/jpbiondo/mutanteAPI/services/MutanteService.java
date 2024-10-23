@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -51,62 +52,100 @@ public class MutanteService {
     }
 
     public static boolean isMutant(String[] dna) {
-
-        int consecutivesByCol = 1;
-        int[] consecutivesByRow = new int[dna.length];
-        int[] consecutivesByLRDiagonal = new int[2*(dna.length - 4) + 1];
-        int[] consecutivesByRLDiagonal = new int[2*(dna.length - 4) + 1];
-
-        Arrays.fill(consecutivesByRow, 1);
-        Arrays.fill(consecutivesByLRDiagonal, 1);
-        Arrays.fill(consecutivesByRLDiagonal, 1);
-
-        int diagElemIndex;
         int countSequence = 0;
-        final int diagRadius = dna.length-4;
+
+        final DnaSequenceChecker dnaSequenceChecker = new DnaSequenceChecker(dna);
+
 
         for(int i = 0; i < dna.length; i++) {
             for(int j = 0; j < dna[i].length(); j++) {
-
-                //Check for sequences in columns
-                if(j > 0) {
-                    consecutivesByCol = checkConsecutive(dna[i].charAt(j), dna[i].charAt(j-1), consecutivesByCol);
-                    if(isSequence(consecutivesByCol)) countSequence++;
-                }
-
-                if(i > 0){
-                    //Check for sequence in 4 or more chars diagonals from Left to Right
-                    if(j > 0){
-                        if(isAValidDiagonalChar(diagRadius, i, j)) {
-                            diagElemIndex = diagRadius - (i-j);
-                            consecutivesByLRDiagonal[diagElemIndex] = checkConsecutive(dna[i].charAt(j), dna[i-1].charAt(j-1), consecutivesByLRDiagonal[diagElemIndex]);
-                            if(isSequence(consecutivesByLRDiagonal[diagElemIndex])) countSequence++;
-                        }
-                    }
-
-                    //Check for sequence in 4 or more chars diagonals from Right to Left
-                    if(j < dna.length - 1){
-                        if(isAValidDiagonalChar(diagRadius, (dna.length - 1) - i, j)) {
-                            diagElemIndex = diagRadius - ((dna.length - i - 1) - j);
-                            consecutivesByRLDiagonal[diagElemIndex] = checkConsecutive(dna[i].charAt(j), dna[i-1].charAt(j+1), consecutivesByRLDiagonal[diagElemIndex]);
-                            if(isSequence(consecutivesByRLDiagonal[diagElemIndex])) countSequence++;
-                        }
-                    }
-
-                    //Check for sequence in rows
-                    consecutivesByRow[j] = checkConsecutive(dna[i].charAt(j), dna[i-1].charAt(j), consecutivesByRow[j]);
-                    if(isSequence(consecutivesByRow[j])) countSequence++;
-                }
-
+                countSequence += dnaSequenceChecker.checkColumn(dna, i, j);
+                countSequence += dnaSequenceChecker.checkRow(dna, i, j);
+                countSequence += dnaSequenceChecker.checkDiagonalLR(dna, i, j);
+                countSequence += dnaSequenceChecker.checkDiagonalRL(dna, i, j);
                 if(countSequence > 1) return true;
             }
         }
         return false;
     }
 
-    private static int checkConsecutive(char a, char b, int consecutiveCount) {
-        return a==b ? ++consecutiveCount : 1;
+}
+
+class DnaSequenceChecker {
+    private int consecutivesByCol;
+    private final int[] consecutivesByRow;
+    private final int[] consecutivesByLRDiagonal;
+    private final int[] consecutivesByRLDiagonal;
+    private final int diagRadius;
+
+    public DnaSequenceChecker(String[] dna) {
+        int size = dna.length;
+
+        consecutivesByCol = 1;
+        consecutivesByRow = new int[size];
+        consecutivesByRLDiagonal = new int[2*(size - 4) + 1];
+        consecutivesByLRDiagonal = new int[2*(size - 4) + 1];
+        diagRadius = size - 4;
+
+        //arrays initialization
+        Arrays.fill(consecutivesByRow, 1);
+        Arrays.fill(consecutivesByRLDiagonal, 1);
+        Arrays.fill(consecutivesByLRDiagonal, 1);
     }
+
+    public int checkColumn(String[] dna, int i, int j) {
+        if(j > 0 && dna[i].charAt(j) == dna[i].charAt(j-1)) {
+            consecutivesByCol++;
+            if(isSequence(consecutivesByCol)) return 1;
+        } else {
+            consecutivesByCol = 1;
+        }
+        return 0;
+    }
+
+    public int checkRow(String[] dna, int i, int j) {
+        if(i > 0 && dna[i].charAt(j) == dna[i-1].charAt(j)) {
+            consecutivesByRow[j]++;
+            if(isSequence(consecutivesByRow[j])) return 1;
+        } else {
+            consecutivesByRow[j] = 1;
+        }
+        return 0;
+    }
+
+    public int checkDiagonalLR(String[] dna, int i, int j) {
+        if(i > 0 && j > 0 && isAValidDiagonalChar(diagRadius, i, j)){
+            int diagElemIndex = diagRadius - (i-j);
+
+            if(dna[i].charAt(j) == dna[i - 1].charAt(j - 1)) {
+                consecutivesByLRDiagonal[diagElemIndex]++;
+                if(isSequence(consecutivesByLRDiagonal[diagElemIndex])) return 1;
+            }
+
+            else {
+                consecutivesByLRDiagonal[diagElemIndex] = 1;
+            }
+        }
+        return 0;
+    }
+
+    public int checkDiagonalRL(String[] dna, int i, int j) {
+        if( i > 0 && j < dna.length - 1 && isAValidDiagonalChar(diagRadius, (dna.length - 1) - i, j)) {
+            int diagElemIndex = diagRadius - ((dna.length - i - 1) - j);
+
+            if(dna[i].charAt(j) == dna[i - 1].charAt(j + 1)) {
+                consecutivesByRLDiagonal[diagElemIndex]++;
+                if(isSequence(consecutivesByRLDiagonal[diagElemIndex])) return 1;
+            }
+
+            else {
+                consecutivesByRLDiagonal[diagElemIndex] = 1;
+            }
+
+        }
+        return 0;
+    }
+
 
     private static boolean isSequence(int consecutiveCount) {
         return consecutiveCount == 4;
