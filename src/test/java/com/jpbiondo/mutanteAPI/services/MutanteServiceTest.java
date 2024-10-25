@@ -24,7 +24,7 @@ public class MutanteServiceTest {
 
     private void testHelper(String[] dna, boolean expectedResult) {
         try {
-            Assertions.assertEquals(expectedResult,MutanteService.isMutant(dna));
+            Assertions.assertEquals(expectedResult,mutanteService.isMutant(dna));
         } catch (Exception e){
             System.out.println(e.getMessage());
         }

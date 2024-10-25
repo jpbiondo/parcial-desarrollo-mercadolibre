@@ -51,7 +51,7 @@ public class MutanteService {
         throw new Exception("Not a mutant");
     }
 
-    public static boolean isMutant(String[] dna) {
+    public boolean isMutant(String[] dna) {
         int countSequence = 0;
 
         final DnaSequenceChecker dnaSequenceChecker = new DnaSequenceChecker(dna);
