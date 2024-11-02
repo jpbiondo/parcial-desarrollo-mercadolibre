@@ -17,17 +17,4 @@ public class MutanteApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MutanteApiApplication.class, args);
 	}
-
-	@Bean
-	public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-		RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-				.prefixCacheNameWith(this.getClass().getPackageName() + ".")
-				.entryTtl(Duration.ofSeconds(120))
-				.disableCachingNullValues();
-
-		return RedisCacheManager.builder(connectionFactory)
-				.cacheDefaults(config)
-				.build();
-
-	}
 }
