@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class StatsDto {
+public class StatsDto implements Serializable {
     @JsonProperty("count_mutant_dna")
     private long countMutantDna;
 
